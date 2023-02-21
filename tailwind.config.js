@@ -1,10 +1,19 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
+const colors = require('./style/colors')
+
 /** @type {import("tailwindcss/tailwind-config").TailwindConfig} */
 const tailwindConfig = {
-  content: [
-    './{components,pages}/**/*.{js,jsx,ts,tsx}',
-    './node_modules/@dao-dao/**/*.{js,jsx,ts,tsx}',
-  ],
-  presets: [require('@dao-dao/config/tailwind/config')],
+  content: ['./{components,pages}/**/*.{js,jsx,ts,tsx}'],
+  theme: {
+    screens: {
+      xs: '410px',
+      ...defaultTheme.screens,
+    },
+    extend: {
+      colors,
+    },
+  },
 }
 
 module.exports = tailwindConfig

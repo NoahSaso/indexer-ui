@@ -1,13 +1,16 @@
-import { SensorsOff } from '@mui/icons-material'
 import { useWalletManager } from '@noahsaso/cosmodal'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 
-import { useCfWorkerAuthPostRequest } from '@dao-dao/stateful/hooks/useCfWorkerAuthPostRequest'
-import { InputLabel, TextAreaInput, TextInput } from '@dao-dao/stateless'
-import { Button } from '@dao-dao/stateless/components/buttons/Button'
-
+import {
+  Button,
+  DisconnectWallet,
+  InputLabel,
+  TextAreaInput,
+  TextInput,
+} from '@/components'
+import { useCfWorkerAuthPostRequest } from '@/hooks'
 import {
   AccountKey,
   CreateKeyRequest,
@@ -16,11 +19,12 @@ import {
   ResetKeyRequest,
   ResetKeyResponse,
 } from '@/types'
+import { formatError } from '@/utils'
 
-import { Connect } from '../components/Connect'
+import { ConnectWallet } from '../components/button/ConnectWallet'
 
 const Home = () => {
-  const { connected, disconnect } = useWalletManager()
+  const { connected } = useWalletManager()
 
   const { ready, postRequest } = useCfWorkerAuthPostRequest(
     'https://accounts.indexer.zone',
@@ -48,7 +52,7 @@ const Home = () => {
       const keysResponse = (await postRequest('/keys/list')) as ListKeysResponse
       setKeys(keysResponse.keys)
     } catch (err) {
-      toast.error(err.message)
+      toast.error(formatError(err))
     } finally {
       setListingKeys(false)
     }
@@ -84,7 +88,7 @@ const Home = () => {
       }))
       setKeys((prev) => [...(prev || []), createResponse.createdKey])
     } catch (err) {
-      toast.error(err.message)
+      toast.error(formatError(err))
     } finally {
       setCreatingKey(false)
     }
@@ -124,7 +128,7 @@ const Home = () => {
         [name]: resetResponse.key,
       }))
     } catch (err) {
-      toast.error(err.message)
+      toast.error(formatError(err))
     } finally {
       setResettingKey(undefined)
     }
@@ -133,26 +137,26 @@ const Home = () => {
   return (
     <main className="flex h-full w-full items-center justify-center">
       {!connected ? (
-        <Connect />
+        <ConnectWallet />
       ) : (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-4 rounded-md bg-background-primary p-6">
             <div className="space-y-2">
-              <InputLabel name="Name (unique)" />
+              <InputLabel>Name (unique)</InputLabel>
               <TextInput fieldName="name" register={register} required />
             </div>
 
             <div className="space-y-2">
-              <InputLabel name="Description (optional)" />
+              <InputLabel>Description (optional)</InputLabel>
               <TextAreaInput fieldName="description" register={register} />
             </div>
 
             <Button
-              center
               disabled={!ready}
               loading={creatingKey}
               onClick={handleSubmit(createKey)}
               size="lg"
+              variant="ghost"
             >
               Create key
             </Button>
@@ -160,11 +164,11 @@ const Home = () => {
 
           <div className="flex flex-col gap-4 rounded-md bg-background-primary p-6">
             <Button
-              center
               disabled={!ready}
               loading={listingKeys}
               onClick={listKeys}
               size="lg"
+              variant="ghost"
             >
               View keys
             </Button>
@@ -211,7 +215,6 @@ const Home = () => {
                     <p className="secondary-text">{keyForName[key.name]}</p>
 
                     <Button
-                      center
                       onClick={() =>
                         setKeyForName((prev) => {
                           const { [key.name]: _, ...rest } = prev
@@ -226,7 +229,6 @@ const Home = () => {
                 )}
 
                 <Button
-                  center
                   disabled={!ready}
                   loading={resettingKey === key.name}
                   onClick={() => resetKey(key.name)}
@@ -238,10 +240,7 @@ const Home = () => {
             ))}
           </div>
 
-          <Button center onClick={disconnect} size="lg" variant="ghost">
-            <SensorsOff className="!h-6 !w-6" />
-            <p>Disconnect wallet</p>
-          </Button>
+          <DisconnectWallet />
         </div>
       )}
     </main>

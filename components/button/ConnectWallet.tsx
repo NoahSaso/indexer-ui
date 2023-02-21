@@ -1,18 +1,23 @@
+import { Sensors } from '@mui/icons-material'
 import { WalletConnectionStatus, useWalletManager } from '@noahsaso/cosmodal'
 
-import { ConnectWallet } from '@dao-dao/stateless/components/wallet/ConnectWallet'
+import { Button } from './Button'
 
-export const Connect = () => {
+export const ConnectWallet = () => {
   const { connect, status } = useWalletManager()
 
   return (
-    <ConnectWallet
+    <Button
       loading={
         status === WalletConnectionStatus.Initializing ||
         status === WalletConnectionStatus.AttemptingAutoConnection ||
         status === WalletConnectionStatus.Connecting
       }
-      onConnect={connect}
-    />
+      onClick={connect}
+      size="lg"
+    >
+      <Sensors className="!h-6 !w-6" />
+      Connect wallet
+    </Button>
   )
 }

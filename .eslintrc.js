@@ -1,11 +1,55 @@
 /** @type {import("eslint").Linter.Config} */
 const eslintConfig = {
-  extends: [require.resolve('@dao-dao/config/eslint')],
   ignorePatterns: ['.next', '.turbo', 'node_modules', 'out', 'next-env.d.ts'],
-  root: true,
+  extends: ['next/core-web-vitals', 'plugin:prettier/recommended'],
+  plugins: ['@typescript-eslint', 'tailwindcss', 'import', 'unused-imports'],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: 'tsconfig.json',
+  },
   rules: {
-    'i18next/no-literal-string': 'off',
-    'regex/invalid': 'off',
+    'no-unused-vars': ['off'],
+    'react/jsx-sort-props': ['warn', { reservedFirst: ['key'] }],
+    'tailwindcss/classnames-order': ['warn'],
+    '@typescript-eslint/no-unused-vars': ['off'],
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal'],
+        'newlines-between': 'always',
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+        pathGroups: [
+          {
+            pattern: '@/**',
+            group: 'internal',
+            position: 'after',
+          },
+        ],
+      },
+    ],
+    'import/no-duplicates': 'error',
+    'sort-imports': [
+      'error',
+      {
+        // Let eslint-plugin-import handle declaration groups above.
+        ignoreDeclarationSort: true,
+        // Sort within import statements.
+        ignoreMemberSort: false,
+      },
+    ],
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'warn',
+      {
+        vars: 'all',
+        varsIgnorePattern: '^_',
+        args: 'after-used',
+        argsIgnorePattern: '^_',
+      },
+    ],
   },
 }
 

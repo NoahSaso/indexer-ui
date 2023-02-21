@@ -7,6 +7,7 @@ import {
   WalletType,
 } from '@noahsaso/cosmodal'
 import type { AppProps } from 'next/app'
+import { RecoilRoot } from 'recoil'
 
 import { ToastNotifications } from '@/components'
 
@@ -37,7 +38,11 @@ export default function App({ Component, pageProps }: AppProps) {
           ],
         }}
       >
-        <Component {...pageProps} />
+        <RecoilRoot>
+          <main className="flex h-full w-full items-center justify-center">
+            <Component {...pageProps} />
+          </main>
+        </RecoilRoot>
       </WalletManagerProvider>
 
       <ToastNotifications />

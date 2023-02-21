@@ -26,7 +26,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.1",
-    "react-hot-toast": "^2.4.0"
+    "react-hot-toast": "^2.4.0",
+    "recoil": "^0.7.6"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.53.0",

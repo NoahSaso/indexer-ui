@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
 
-import { Loader } from '../Loader'
+import { Loader } from '../misc/Loader'
 
 export type ButtonProps = ComponentPropsWithoutRef<'button'> & {
   variant?: 'primary' | 'secondary' | 'ghost'

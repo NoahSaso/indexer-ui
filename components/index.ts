@@ -1,6 +1,5 @@
 export * from './button'
 export * from './input'
+export * from './misc'
 export * from './toast'
-
-export * from './button/ConnectWallet'
-export * from './Loader'
+export * from './widgets'

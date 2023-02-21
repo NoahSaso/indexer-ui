@@ -2,10 +2,10 @@ import { makeSignDoc } from '@cosmjs/amino'
 import { useWallet } from '@noahsaso/cosmodal'
 import { useCallback } from 'react'
 
-export const useCfWorkerAuthPostRequest = (
-  apiBase: string,
-  signatureType: string
-) => {
+const apiBase = 'https://accounts.indexer.zone'
+const signatureType = 'Indexer Account'
+
+export const useCfWorkerAuthPostRequest = () => {
   const {
     walletClient,
     publicKey,
@@ -109,15 +109,7 @@ export const useCfWorkerAuthPostRequest = (
       // If response OK, return response body.
       return await response.json()
     },
-    [
-      apiBase,
-      chainInfo,
-      publicKey,
-      signatureType,
-      walletAddress,
-      walletClient,
-      ready,
-    ]
+    [chainInfo, publicKey, walletAddress, walletClient, ready]
   )
 
   return { ready, postRequest }

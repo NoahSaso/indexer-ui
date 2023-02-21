@@ -83,7 +83,7 @@ export const ViewKeysWidget = () => {
         loading={listingKeys}
         onClick={listKeys}
         size="lg"
-        variant="ghost"
+        variant="secondary"
       >
         View keys
       </Button>

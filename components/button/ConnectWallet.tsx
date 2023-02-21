@@ -14,9 +14,9 @@ export const ConnectWallet = () => {
         status === WalletConnectionStatus.Connecting
       }
       onClick={connect}
-      size="lg"
+      variant="secondary"
     >
-      <Sensors className="!h-6 !w-6" />
+      <Sensors className="!h-5 !w-5" />
       Connect wallet
     </Button>
   )

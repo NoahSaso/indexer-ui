@@ -89,7 +89,18 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {/* Loader. */}
         {loading && (
           <div className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center p-[inherit]">
-            <Loader invert={variant === 'primary'} />
+            <Loader
+              invert={variant === 'primary'}
+              size={
+                size === 'sm'
+                  ? 12
+                  : size === 'md'
+                  ? 16
+                  : size === 'lg'
+                  ? 20
+                  : undefined
+              }
+            />
           </div>
         )}
 

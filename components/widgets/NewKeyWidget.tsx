@@ -82,7 +82,7 @@ export const NewKeyWidget = () => {
         loading={creatingKey}
         onClick={handleSubmit(createKey)}
         size="lg"
-        variant="ghost"
+        variant="secondary"
       >
         Create key
       </Button>

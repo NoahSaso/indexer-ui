@@ -9,7 +9,7 @@ import {
 import type { AppProps } from 'next/app'
 import { RecoilRoot } from 'recoil'
 
-import { ToastNotifications } from '@/components'
+import { AppLayout, ToastNotifications } from '@/components'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -39,9 +39,9 @@ export default function App({ Component, pageProps }: AppProps) {
         }}
       >
         <RecoilRoot>
-          <main className="flex h-full w-full items-center justify-center">
+          <AppLayout>
             <Component {...pageProps} />
-          </main>
+          </AppLayout>
         </RecoilRoot>
       </WalletManagerProvider>
 

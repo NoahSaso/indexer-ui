@@ -7,8 +7,8 @@ export const DisconnectWallet = () => {
   const { disconnect } = useWalletManager()
 
   return (
-    <Button onClick={disconnect} size="lg" variant="ghost">
-      <SensorsOff className="!h-6 !w-6" />
+    <Button onClick={disconnect} variant="secondary">
+      <SensorsOff className="!h-5 !w-5" />
       Disconnect wallet
     </Button>
   )

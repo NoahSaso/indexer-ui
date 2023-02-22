@@ -1,9 +1,5 @@
 import { coins } from '@cosmjs/amino'
-import {
-  AddRounded,
-  ExpandCircleDownOutlined,
-  KeyRounded,
-} from '@mui/icons-material'
+import { AddRounded } from '@mui/icons-material'
 import { useWallet } from '@noahsaso/cosmodal'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
@@ -11,12 +7,11 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 
 import {
+  AccountKeyCard,
   Button,
-  ButtonPopup,
   CopyToClipboard,
   EnsureConnected,
   Header,
-  IconButton,
   InputLabel,
   Loader,
   Modal,
@@ -173,11 +168,13 @@ const InnerKeys = () => {
       return
     }
 
-    if (
-      payingForKey.credits.length !== 1 ||
-      payingForKey.credits[0].paymentSource !==
-        AccountKeyCreditPaymentSource.CwReceipt
-    ) {
+    // Get first credit using the cw-receipt contract source.
+    const receiptCredit = payingForKey.credits.find(
+      (credit) =>
+        credit.paymentSource === AccountKeyCreditPaymentSource.CwReceipt
+    )
+
+    if (!receiptCredit) {
       toast.error('Unable to pay for this key.')
       return
     }
@@ -187,9 +184,11 @@ const InnerKeys = () => {
     try {
       // Refresh and get current credits so we can detect when they change.
       const updatedKeys = await keys.refetch()
-      const keyCreditsBefore = updatedKeys.data?.find(
-        (key) => key.name === payingForKey.name
-      )?.credits[0]?.amount
+      const keyCreditsBefore = updatedKeys.data
+        ?.find((key) => key.name === payingForKey.name)
+        ?.credits.find(
+          ({ paymentId }) => paymentId === receiptCredit.paymentId
+        )?.amount
       if (keyCreditsBefore === undefined) {
         toast.error('Unable to pay for this key.')
         return
@@ -200,7 +199,7 @@ const InnerKeys = () => {
         config.data.cwReceiptPaymentAddress,
         {
           pay: {
-            id: payingForKey.credits[0].paymentId,
+            id: receiptCredit.paymentId,
           },
         },
         'auto',
@@ -216,9 +215,11 @@ const InnerKeys = () => {
           let attempts = 10
           while (attempts > 0) {
             const updatedKeys = await keys.refetch()
-            const keyCreditsAfter = updatedKeys.data?.find(
-              (key) => key.name === payingForKey.name
-            )?.credits[0]?.amount
+            const keyCreditsAfter = updatedKeys.data
+              ?.find((key) => key.name === payingForKey.name)
+              ?.credits.find(
+                ({ paymentId }) => paymentId === receiptCredit.paymentId
+              )?.amount
 
             // If the key was updated, we're done.
             if (
@@ -279,103 +280,26 @@ const InnerKeys = () => {
           <Loader />
         ) : (
           keys.data?.map((key) => (
-            <div
+            <AccountKeyCard
               key={key.name}
-              className="relative flex flex-col gap-2 rounded-md bg-background-primary p-4"
-            >
-              <div className="absolute top-2 right-2">
-                <ButtonPopup
-                  Trigger={({ open, ...props }) => (
-                    <IconButton
-                      Icon={ExpandCircleDownOutlined}
-                      focused={open}
-                      variant="ghost"
-                      {...props}
-                    />
-                  )}
-                  dontCloseOnClick
-                  popupClassName="w-[8rem]"
-                  position="left"
-                  sections={[
-                    {
-                      label: 'Credits',
-                      buttons: [
-                        {
-                          label: key.credits.some(({ paidFor }) => paidFor)
-                            ? 'Buy more'
-                            : 'Buy',
-                          variant: key.credits.some(({ paidFor }) => paidFor)
-                            ? 'secondary'
-                            : 'primary',
-                          onClick: () => {
-                            setPayingForKeyName(key.name)
-                            setPayModalVisible(true)
-                          },
-                        },
-                      ],
-                    },
-                    {
-                      label: 'API Key',
-                      buttons: [
-                        {
-                          label:
-                            resetKeyConfirm === key.name
-                              ? 'Confirm Reset'
-                              : 'Reset',
-                          variant: 'danger',
-                          loading:
-                            resetKey.isLoading &&
-                            resetKey.variables?.name === key.name,
-                          onClick: () => {
-                            if (resetKeyConfirm === key.name) {
-                              resetKey.mutate({ name: key.name })
-                              setResetKeyConfirm('')
-                            } else {
-                              setResetKeyConfirm(key.name)
-                            }
-                          },
-                        },
-                      ],
-                    },
-                  ]}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <div className="flex flex-row items-center gap-2">
-                  <KeyRounded className="!h-5 !w-5 rotate-45" />
-                  <p className="primary-text">{key.name}</p>
-                </div>
-
-                {key.description && (
-                  <p className="secondary-text">{key.description}</p>
-                )}
-
-                <div className="space-y-2">
-                  {key.credits.map((credit) => (
-                    <div key={credit.paymentId} className="space-y-2">
-                      {credit.paidFor ? (
-                        <>
-                          {credit.paidAt && (
-                            <p className="secondary-text">
-                              Paid at:{' '}
-                              {new Date(credit.paidAt).toLocaleString()}
-                            </p>
-                          )}
-
-                          <p className="secondary-text">
-                            {BigInt(credit.used).toLocaleString()} credits used
-                            of {BigInt(credit.amount).toLocaleString()}
-                          </p>
-                        </>
-                      ) : (
-                        <p className="secondary-text">0 credits</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+              accountKey={key}
+              onBuyCredits={() => {
+                setPayingForKeyName(key.name)
+                setPayModalVisible(true)
+              }}
+              onResetKey={() => {
+                if (resetKeyConfirm === key.name) {
+                  resetKey.mutate({ name: key.name })
+                  setResetKeyConfirm('')
+                } else {
+                  setResetKeyConfirm(key.name)
+                }
+              }}
+              resetConfirm={resetKeyConfirm === key.name}
+              resetLoading={
+                resetKey.isLoading && resetKey.variables?.name === key.name
+              }
+            />
           ))
         )}
       </div>
@@ -456,13 +380,15 @@ const InnerKeys = () => {
             <p className="legend-text">Remaining credits:</p>
 
             <p className="font-mono">
-              {payingForKey?.credits
-                .reduce(
-                  (acc, credit) =>
-                    acc + (Number(credit.amount) - Number(credit.used)),
-                  0
-                )
-                ?.toLocaleString()}
+              {payingForKey?.credits.some(({ amount }) => amount === '-1')
+                ? 'unlimited'
+                : payingForKey?.credits
+                    .reduce(
+                      (acc, credit) =>
+                        acc + (Number(credit.amount) - Number(credit.used)),
+                      0
+                    )
+                    ?.toLocaleString()}
             </p>
           </div>
 

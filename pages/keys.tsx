@@ -141,7 +141,11 @@ const InnerKeys = () => {
   const maxAffordableCredits = Math.floor(payBalance * creditsPerMacroAmount)
 
   const [payModalVisible, setPayModalVisible] = useState(false)
-  const [payingForKey, setPayingForKey] = useState<AccountKey | null>(null)
+  const [payingForKeyName, setPayingForKeyName] = useState<string | null>(null)
+  const payingForKey =
+    (keys.isFetched &&
+      keys.data?.find((key) => key.name === payingForKeyName)) ||
+    null
 
   const payForm = useForm<PayForm>({
     defaultValues: {
@@ -304,7 +308,7 @@ const InnerKeys = () => {
                             ? 'secondary'
                             : 'primary',
                           onClick: () => {
-                            setPayingForKey(key)
+                            setPayingForKeyName(key.name)
                             setPayModalVisible(true)
                           },
                         },

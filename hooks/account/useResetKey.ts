@@ -1,18 +1,17 @@
 import { useWallet } from '@noahsaso/cosmodal'
 import { toast } from 'react-hot-toast'
 import { useMutation, useQueryClient } from 'react-query'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilValue } from 'recoil'
 
-import { accountApiKeyForName, accountToken } from '@/state'
+import { accountToken } from '@/state'
 import { ResetKeyRequest, ResetKeyResponse } from '@/types'
 import { API_BASE, formatError } from '@/utils'
 
-export const useResetKey = () => {
+export const useResetKey = (
+  onSuccess?: (name: string, newKey: string) => void
+) => {
   const { publicKey: { hex: hexPublicKey } = {} } = useWallet()
   const token = useRecoilValue(accountToken(hexPublicKey ?? ''))
-  const setKeyForName = useSetRecoilState(
-    accountApiKeyForName(hexPublicKey ?? '')
-  )
 
   const resetKey = async (request: ResetKeyRequest) => {
     const response = await fetch(API_BASE + '/keys/reset', {
@@ -37,14 +36,10 @@ export const useResetKey = () => {
   const queryClient = useQueryClient()
   return useMutation(resetKey, {
     onSuccess: ({ key }, { name }) => {
-      // Store new API key.
-      setKeyForName((prev) => ({
-        ...prev,
-        [name]: key,
-      }))
-
       // Refetch keys.
       queryClient.invalidateQueries(['keys', token])
+
+      onSuccess?.(name, key)
     },
     onError: (err) => {
       toast.error(formatError(err))

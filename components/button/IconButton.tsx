@@ -6,6 +6,7 @@ export type IconButtonProps = ComponentPropsWithoutRef<'button'> & {
   // Default: 'md'
   size?: 'sm' | 'md' | 'lg'
   rounded?: boolean
+  focused?: boolean
   Icon: ComponentType<{ className?: string }>
   iconClassName?: string
 }
@@ -16,6 +17,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       variant = 'ghost',
       size = 'md',
       rounded,
+      focused,
       Icon,
       iconClassName,
       className,
@@ -31,6 +33,9 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
 
           // Rounded.
           rounded ? 'rounded-full' : 'rounded-md',
+
+          // Focused.
+          focused && 'ring-2 ring-inset ring-border-interactive-focus',
 
           // Variants.
           variant === 'ghost' && {

@@ -1,18 +1,17 @@
 import { useWallet } from '@noahsaso/cosmodal'
 import { toast } from 'react-hot-toast'
 import { useMutation, useQueryClient } from 'react-query'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilValue } from 'recoil'
 
-import { accountApiKeyForName, accountToken } from '@/state'
-import { CreateKeyRequest, CreateKeyResponse } from '@/types'
+import { accountToken } from '@/state'
+import { AccountKey, CreateKeyRequest, CreateKeyResponse } from '@/types'
 import { API_BASE, formatError } from '@/utils'
 
-export const useCreateKey = () => {
+export const useCreateKey = (
+  onSuccess?: (key: AccountKey, apiKey: string) => void
+) => {
   const { publicKey: { hex: hexPublicKey } = {} } = useWallet()
   const token = useRecoilValue(accountToken(hexPublicKey ?? ''))
-  const setKeyForName = useSetRecoilState(
-    accountApiKeyForName(hexPublicKey ?? '')
-  )
 
   const createKey = async (request: CreateKeyRequest) => {
     const response = await fetch(API_BASE + '/keys', {
@@ -37,14 +36,10 @@ export const useCreateKey = () => {
   const queryClient = useQueryClient()
   return useMutation(createKey, {
     onSuccess: ({ apiKey, createdKey }) => {
-      // Store API key.
-      setKeyForName((prev) => ({
-        ...prev,
-        [createdKey.name]: apiKey,
-      }))
-
       // Refetch keys.
       queryClient.invalidateQueries(['keys', token])
+
+      onSuccess?.(createdKey, apiKey)
     },
     onError: (err) => {
       toast.error(formatError(err))

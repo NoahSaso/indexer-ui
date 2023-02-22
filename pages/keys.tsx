@@ -9,7 +9,6 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { useRecoilState } from 'recoil'
 
 import {
   Button,
@@ -32,7 +31,6 @@ import {
   useKeys,
   useResetKey,
 } from '@/hooks'
-import { accountApiKeyForName } from '@/state'
 import {
   AccountKey,
   AccountKeyCreditPaymentSource,
@@ -61,36 +59,36 @@ type PayForm = {
 }
 
 const InnerKeys = () => {
+  const { signingCosmWasmClient, address } = useWallet()
+
   const keys = useKeys()
-  const createKey = useCreateKey()
-  const resetKey = useResetKey()
 
-  const {
-    publicKey: { hex: hexPublicKey } = {},
-    signingCosmWasmClient,
-    address,
-  } = useWallet()
+  const [keyWithApiKey, setKeyWithApiKey] = useState<{
+    key: AccountKey
+    apiKey: string
+  } | null>(null)
+  const [apiKeyVisible, setApiKeyVisible] = useState(false)
 
-  const [keyForName, setKeyForName] = useRecoilState(
-    accountApiKeyForName(hexPublicKey ?? '')
-  )
-  const showKeyForName = Object.entries(keyForName)[0]
-
-  const [keyForNameVisible, setKeyForNameVisible] = useState(false)
   const hideKeyForName = () => {
-    setKeyForNameVisible(false)
-
+    setApiKeyVisible(false)
     // Clear after a small delay to let Modal fade away.
-    setTimeout(
-      () =>
-        showKeyForName &&
-        setKeyForName((prev) => {
-          const { [showKeyForName[0]]: _, ...rest } = prev
-          return rest
-        }),
-      200
-    )
+    setTimeout(() => setKeyWithApiKey(null), 200)
   }
+  const resetKey = useResetKey((name, apiKey) => {
+    // Show toast on success.
+    toast.success(`Reset ${name}.`)
+
+    // Show API key.
+    const key =
+      (keys.isFetched && keys.data?.find((k) => k.name === name)) || null
+    setKeyWithApiKey(
+      key && {
+        key,
+        apiKey,
+      }
+    )
+    setApiKeyVisible(!!key)
+  })
 
   const [createVisible, setCreateVisible] = useState(false)
   const createKeyForm = useForm<CreateKeyRequest>({
@@ -98,6 +96,20 @@ const InnerKeys = () => {
       name: '',
       description: '',
     },
+  })
+  const createKey = useCreateKey((key, apiKey) => {
+    // Show toast on success.
+    toast.success(`Created ${key.name}.`)
+
+    // Hide modal.
+    setCreateVisible(false)
+
+    // Show API key.
+    setKeyWithApiKey({
+      key,
+      apiKey,
+    })
+    setApiKeyVisible(true)
   })
 
   const [resetKeyConfirm, setResetKeyConfirm] = useState('')
@@ -272,8 +284,7 @@ const InnerKeys = () => {
                   Trigger={({ open, ...props }) => (
                     <IconButton
                       Icon={ExpandCircleDownOutlined}
-                      // className="text-icon-secondary"
-                      // focused={open}
+                      focused={open}
                       variant="ghost"
                       {...props}
                     />
@@ -315,7 +326,6 @@ const InnerKeys = () => {
                             if (resetKeyConfirm === key.name) {
                               resetKey.mutate({ name: key.name })
                               setResetKeyConfirm('')
-                              setKeyForNameVisible(true)
                             } else {
                               setResetKeyConfirm(key.name)
                             }
@@ -377,10 +387,9 @@ const InnerKeys = () => {
       >
         <form
           className="flex flex-col gap-4"
-          onSubmit={createKeyForm.handleSubmit((data) => {
+          onSubmit={createKeyForm.handleSubmit((data) =>
             createKey.mutate(data)
-            setKeyForNameVisible(true)
-          })}
+          )}
         >
           <div className="space-y-2">
             <InputLabel>Name (unique)</InputLabel>
@@ -415,7 +424,7 @@ const InnerKeys = () => {
       {/* Buy credits modal */}
       <Modal
         header={{
-          title: `Buy credits for "${payingForKey?.name}" key`,
+          title: `Buy credits for ${payingForKey?.name}`,
         }}
         onClose={() => setPayModalVisible(false)}
         visible={payModalVisible}
@@ -520,9 +529,9 @@ const InnerKeys = () => {
           </Button>
         }
         header={{
-          title: `API key for "${showKeyForName?.[0]}" key`,
+          title: `API key for ${keyWithApiKey?.key.name}`,
         }}
-        visible={keyForNameVisible && !!showKeyForName}
+        visible={apiKeyVisible && !!keyWithApiKey}
       >
         <p className="body-text mb-4">
           This is the only time you will be able to view this API key. If you
@@ -530,7 +539,7 @@ const InnerKeys = () => {
           credits. Click below to copy.
         </p>
 
-        <CopyToClipboard value={showKeyForName?.[1] ?? ''} />
+        <CopyToClipboard value={keyWithApiKey?.apiKey ?? ''} />
       </Modal>
     </>
   )

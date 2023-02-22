@@ -10,10 +10,6 @@ export const ToastNotifications = () => (
     reverseOrder
     toastOptions={{
       duration: 6000,
-      // Show for entire duration of promise.
-      loading: {
-        duration: Infinity,
-      },
       style: {
         borderRadius: '0',
         background: 'none',

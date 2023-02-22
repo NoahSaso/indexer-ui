@@ -12,23 +12,25 @@ export type IconButtonProps = ComponentPropsWithoutRef<'button'> & {
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
   function IconButton(
-    { variant = 'ghost', size = 'md', rounded, Icon, iconClassName, ...props },
+    {
+      variant = 'ghost',
+      size = 'md',
+      rounded,
+      Icon,
+      iconClassName,
+      className,
+      type = 'button',
+      ...props
+    },
     ref
   ) {
     return (
       <button
         className={clsx(
-          'flex shrink-0 items-center justify-center transition-all',
+          'flex shrink-0 items-center justify-center p-1 transition-all',
 
           // Rounded.
           rounded ? 'rounded-full' : 'rounded-md',
-
-          // Sizes.
-          {
-            'p-1': size === 'sm',
-            'p-2': size === 'md',
-            'p-3': size === 'lg',
-          },
 
           // Variants.
           variant === 'ghost' && {
@@ -39,9 +41,10 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
             'text-icon-interactive-disabled': props.disabled,
           },
 
-          props.className
+          className
         )}
         ref={ref}
+        type={type}
         {...props}
       >
         <Icon

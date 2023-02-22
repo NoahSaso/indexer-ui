@@ -44,9 +44,13 @@ export type CreateKeyResponse =
       error: string
     }
 
-export type ListKeysResponse = {
-  keys: AccountKey[]
-}
+export type ListKeysResponse =
+  | {
+      keys: AccountKey[]
+    }
+  | {
+      error: string
+    }
 
 export type ResetKeyRequest = {
   name: string
@@ -55,6 +59,14 @@ export type ResetKeyRequest = {
 export type ResetKeyResponse =
   | {
       key: string
+    }
+  | {
+      error: string
+    }
+
+export type LoginResponse =
+  | {
+      token: string
     }
   | {
       error: string

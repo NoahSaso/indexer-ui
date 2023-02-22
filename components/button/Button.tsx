@@ -4,7 +4,7 @@ import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import { Loader } from '../misc/Loader'
 
 export type ButtonProps = ComponentPropsWithoutRef<'button'> & {
-  variant?: 'primary' | 'secondary' | 'ghost'
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
   // Default: 'md'
   size?: 'sm' | 'md' | 'lg'
   loading?: boolean
@@ -78,6 +78,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
               disabledOrLoading && !pressed,
             // Default or disabled, pressed.
             'bg-transparent text-text-brand': disabledOrLoading,
+          },
+          variant === 'danger' && {
+            // Default.
+            'bg-background-interactive-error text-text-interactive-error hover:opacity-70 active:opacity-60':
+              !disabledOrLoading,
+            // Disabled.
+            'opacity-50': disabledOrLoading,
           },
 
           className

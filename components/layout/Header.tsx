@@ -1,23 +1,16 @@
-import { useWallet } from '@noahsaso/cosmodal'
+import { ReactNode } from 'react'
 
-import { ConnectWallet, DisconnectWallet, Link } from '../button'
+export type HeaderProps = {
+  title: string
+  rightNode?: ReactNode
+}
 
-export const Header = () => {
-  const { connected } = useWallet()
-
+export const Header = ({ title, rightNode }: HeaderProps) => {
   return (
-    <div className="flex w-full shrink-0 flex-row items-center justify-between border-b border-border-primary bg-background-tertiary p-6">
-      <div className="flex flex-row gap-2">
-        <Link href="/">Home</Link>
+    <div className="mb-4 flex h-12 flex-row items-center justify-between">
+      <p className="header-text">{title}</p>
 
-        {connected && (
-          <>
-            <Link href="/keys">Keys</Link>
-          </>
-        )}
-      </div>
-
-      {connected ? <DisconnectWallet /> : <ConnectWallet />}
+      {rightNode}
     </div>
   )
 }

@@ -1,13 +1,14 @@
 import { atomFamily } from 'recoil'
 
-import { AccountKey } from '@/types'
+import { localStorageEffectJSON } from './effects'
 
 // All account data is parameterized by the public key of the account, so that
 // they show correctly when switching accounts.
 
-export const accountKeys = atomFamily<AccountKey[], string>({
-  key: 'accountKeys',
-  default: [],
+export const accountToken = atomFamily<string, string>({
+  key: 'accountToken',
+  default: '',
+  effects: [localStorageEffectJSON],
 })
 
 // Map from key name to its API key. This is only returned by the create or

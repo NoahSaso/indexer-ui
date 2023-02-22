@@ -7,9 +7,13 @@ import {
   WalletType,
 } from '@noahsaso/cosmodal'
 import type { AppProps } from 'next/app'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import { RecoilRoot } from 'recoil'
 
 import { AppLayout, Loader, ToastNotifications } from '@/components'
+
+// react-query
+const queryClient = new QueryClient()
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -55,9 +59,11 @@ export default function App({ Component, pageProps }: AppProps) {
         }}
       >
         <RecoilRoot>
-          <AppLayout>
-            <Component {...pageProps} />
-          </AppLayout>
+          <QueryClientProvider client={queryClient}>
+            <AppLayout>
+              <Component {...pageProps} />
+            </AppLayout>
+          </QueryClientProvider>
         </RecoilRoot>
       </WalletManagerProvider>
 

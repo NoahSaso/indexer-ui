@@ -4,6 +4,7 @@ export type GetConfigResponse =
         cwReceiptPaymentAddress: string
         nativeDenomAccepted: string
         creditScaleFactor: number
+        webhookCreditCost: number
       }
     }
   | {

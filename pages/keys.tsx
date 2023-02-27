@@ -372,7 +372,9 @@ const InnerKeys = () => {
           <p className="body-text pl-8">1 credit + 1 credit per 10k blocks</p>
 
           <p className="body-text pl-4 font-bold">per webhook triggered</p>
-          <p className="body-text pl-8">20 credits</p>
+          <p className="body-text pl-8">
+            {config.data?.webhookCreditCost ?? '...'} credits
+          </p>
         </div>
 
         <div className="mt-2 space-y-4 rounded-md bg-background-tertiary p-4">

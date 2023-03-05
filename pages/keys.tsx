@@ -69,13 +69,13 @@ const InnerKeys = () => {
     // Clear after a small delay to let Modal fade away.
     setTimeout(() => setKeyWithApiKey(null), 200)
   }
-  const resetKey = useResetKey((name, apiKey) => {
+  const resetKey = useResetKey((id, apiKey) => {
+    const key = (keys.isFetched && keys.data?.find((k) => k.id === id)) || null
+
     // Show toast on success.
-    toast.success(`Reset ${name}.`)
+    toast.success(`Reset ${key?.name || 'key'}.`)
 
     // Show API key.
-    const key =
-      (keys.isFetched && keys.data?.find((k) => k.name === name)) || null
     setKeyWithApiKey(
       key && {
         key,
@@ -107,7 +107,7 @@ const InnerKeys = () => {
     setApiKeyVisible(true)
   })
 
-  const [resetKeyConfirm, setResetKeyConfirm] = useState('')
+  const [resetKeyConfirm, setResetKeyConfirm] = useState<number>()
   // Clear after 5 seconds.
   useEffect(() => {
     if (!resetKeyConfirm) {
@@ -115,7 +115,7 @@ const InnerKeys = () => {
     }
 
     const timeout = setTimeout(() => {
-      setResetKeyConfirm('')
+      setResetKeyConfirm(undefined)
     }, 5000)
 
     return () => clearTimeout(timeout)
@@ -288,17 +288,15 @@ const InnerKeys = () => {
                 setPayModalVisible(true)
               }}
               onResetKey={() => {
-                if (resetKeyConfirm === key.name) {
-                  resetKey.mutate({ name: key.name })
-                  setResetKeyConfirm('')
+                if (resetKeyConfirm === key.id) {
+                  resetKey.mutate(key.id)
+                  setResetKeyConfirm(undefined)
                 } else {
-                  setResetKeyConfirm(key.name)
+                  setResetKeyConfirm(key.id)
                 }
               }}
-              resetConfirm={resetKeyConfirm === key.name}
-              resetLoading={
-                resetKey.isLoading && resetKey.variables?.name === key.name
-              }
+              resetConfirm={resetKeyConfirm === key.id}
+              resetLoading={resetKey.isLoading && resetKey.variables === key.id}
             />
           ))
         )}

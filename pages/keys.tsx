@@ -2,7 +2,7 @@ import { coins } from '@cosmjs/amino'
 import { AddRounded } from '@mui/icons-material'
 import { useWallet } from '@noahsaso/cosmodal'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 
@@ -106,20 +106,6 @@ const InnerKeys = () => {
     })
     setApiKeyVisible(true)
   })
-
-  const [resetKeyConfirm, setResetKeyConfirm] = useState<number>()
-  // Clear after 5 seconds.
-  useEffect(() => {
-    if (!resetKeyConfirm) {
-      return
-    }
-
-    const timeout = setTimeout(() => {
-      setResetKeyConfirm(undefined)
-    }, 5000)
-
-    return () => clearTimeout(timeout)
-  }, [resetKeyConfirm])
 
   const config = useConfig()
   if (config.data && config.data.nativeDenomAccepted !== PAY_DENOM) {
@@ -287,15 +273,7 @@ const InnerKeys = () => {
                 setPayingForKeyName(key.name)
                 setPayModalVisible(true)
               }}
-              onResetKey={() => {
-                if (resetKeyConfirm === key.id) {
-                  resetKey.mutate(key.id)
-                  setResetKeyConfirm(undefined)
-                } else {
-                  setResetKeyConfirm(key.id)
-                }
-              }}
-              resetConfirm={resetKeyConfirm === key.id}
+              onResetKey={() => resetKey.mutate(key.id)}
               resetLoading={resetKey.isLoading && resetKey.variables === key.id}
             />
           ))

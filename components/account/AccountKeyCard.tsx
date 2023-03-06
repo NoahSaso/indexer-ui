@@ -1,4 +1,5 @@
 import { ExpandCircleDownOutlined, KeyRounded } from '@mui/icons-material'
+import { useEffect, useState } from 'react'
 
 import { AccountKey, AccountKeyCreditPaymentSource } from '@/types'
 
@@ -10,7 +11,6 @@ export type AccountKeyCardProps = {
   onBuyCredits: () => void
   onResetKey: () => void
   resetLoading: boolean
-  resetConfirm: boolean
 }
 
 export const AccountKeyCard = ({
@@ -18,8 +18,21 @@ export const AccountKeyCard = ({
   onBuyCredits,
   onResetKey,
   resetLoading,
-  resetConfirm,
 }: AccountKeyCardProps) => {
+  const [resetConfirm, setResetConfirm] = useState(false)
+  // Clear after 3 seconds.
+  useEffect(() => {
+    if (!resetConfirm) {
+      return
+    }
+
+    const timeout = setTimeout(() => {
+      setResetConfirm(false)
+    }, 3000)
+
+    return () => clearTimeout(timeout)
+  }, [resetConfirm])
+
   const totalCredits = credits.reduce(
     (acc, { amount }) => acc + BigInt(amount),
     BigInt(0)
@@ -74,7 +87,9 @@ export const AccountKeyCard = ({
                   label: resetConfirm ? 'Confirm Reset' : 'Reset',
                   variant: 'danger',
                   loading: resetLoading,
-                  onClick: onResetKey,
+                  onClick: resetConfirm
+                    ? onResetKey
+                    : () => setResetConfirm(true),
                 },
               ],
             },
@@ -91,7 +106,7 @@ export const AccountKeyCard = ({
         {description && <p className="secondary-text">{description}</p>}
 
         <div className="space-y-2">
-          {totalCredits > 0 ? (
+          {totalCredits !== BigInt(0) ? (
             <>
               <p className="secondary-text">
                 {usedCredits.toLocaleString()} credits used of{' '}

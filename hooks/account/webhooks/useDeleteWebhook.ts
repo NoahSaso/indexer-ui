@@ -19,6 +19,11 @@ export const useDeleteWebhook = (onSuccess?: () => void) => {
       },
     })
 
+    // No content on success.
+    if (response.status === 204) {
+      return
+    }
+
     const body: DeleteWebhookResponse = await response.json().catch((err) => ({
       error: err instanceof Error ? err.message : err,
     }))

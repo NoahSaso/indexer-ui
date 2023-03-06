@@ -70,7 +70,13 @@ export type LoginResponse =
       error: string
     }
 
+export enum AccountWebhookStateKeyType {
+  Item = 'item',
+  Map = 'map',
+}
+
 export type AccountWebhook = {
+  id: number
   keyId: number | null
   description: string | null
   url: string
@@ -79,7 +85,7 @@ export type AccountWebhook = {
   contractAddresses: string[]
   codeIdSetIds: number[]
   stateKey: string | null
-  stateKeyIsPrefix: boolean | null
+  stateKeyType: AccountWebhookStateKeyType
 }
 
 export type ListWebhooksResponse =
@@ -97,7 +103,7 @@ export type CreateWebhookRequest = Pick<
   | 'onlyFirstSet'
   | 'contractAddresses'
   | 'stateKey'
-  | 'stateKeyIsPrefix'
+  | 'stateKeyType'
 > & {
   accountKeyId: number
   codeIdSetIds: number[]
@@ -123,7 +129,7 @@ export type UpdateWebhookRequest = Partial<
     | 'onlyFirstSet'
     | 'contractAddresses'
     | 'stateKey'
-    | 'stateKeyIsPrefix'
+    | 'stateKeyType'
   > & {
     accountKeyId: number
     codeIdSetIds: number[]
@@ -165,6 +171,46 @@ export type FireWebhookEventResponse =
   | {
       attempt: AccountWebhookEventAttempt
     }
+  | {
+      error: string
+    }
+
+export type AccountCodeIdSet = {
+  id: number
+  name: string
+  codeIds: number[]
+}
+
+export type CreateCodeIdSetRequest = Pick<AccountCodeIdSet, 'name' | 'codeIds'>
+
+export type CreateCodeIdSetResponse =
+  | {
+      id: number
+    }
+  | {
+      error: string
+    }
+
+export type DeleteCodeIdSetResponse =
+  | undefined
+  | {
+      error: string
+    }
+
+export type ListCodeIdSetsResponse =
+  | {
+      codeIdSets: AccountCodeIdSet[]
+    }
+  | {
+      error: string
+    }
+
+export type UpdateCodeIdSetRequest = Partial<
+  Pick<AccountCodeIdSet, 'name' | 'codeIds'>
+>
+
+export type UpdateCodeIdSetResponse =
+  | undefined
   | {
       error: string
     }

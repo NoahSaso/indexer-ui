@@ -4,21 +4,21 @@ import { useMutation, useQueryClient } from 'react-query'
 import { useRecoilValue } from 'recoil'
 
 import { accountToken } from '@/state'
-import { UpdateWebhookRequest, UpdateWebhookResponse } from '@/types'
+import { UpdateCodeIdSetRequest, UpdateCodeIdSetResponse } from '@/types'
 import { API_BASE, formatError } from '@/utils'
 
-export const useUpdateWebhook = (onSuccess?: () => void) => {
+export const useUpdateCodeIdSet = (onSuccess?: () => void) => {
   const { publicKey: { hex: hexPublicKey } = {} } = useWallet()
   const token = useRecoilValue(accountToken(hexPublicKey ?? ''))
 
-  const updateWebhook = async ({
+  const updateCodeIdSet = async ({
     id,
     updates,
   }: {
     id: number
-    updates: UpdateWebhookRequest
+    updates: UpdateCodeIdSetRequest
   }) => {
-    const response = await fetch(API_BASE + '/webhooks/' + id, {
+    const response = await fetch(API_BASE + '/code-id-sets/' + id, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -32,9 +32,11 @@ export const useUpdateWebhook = (onSuccess?: () => void) => {
       return
     }
 
-    const body: UpdateWebhookResponse = await response.json().catch((err) => ({
-      error: err instanceof Error ? err.message : err,
-    }))
+    const body: UpdateCodeIdSetResponse = await response
+      .json()
+      .catch((err) => ({
+        error: err instanceof Error ? err.message : err,
+      }))
     if (body && 'error' in body) {
       throw new Error(body.error)
     }
@@ -43,10 +45,10 @@ export const useUpdateWebhook = (onSuccess?: () => void) => {
   }
 
   const queryClient = useQueryClient()
-  return useMutation(updateWebhook, {
+  return useMutation(updateCodeIdSet, {
     onSuccess: () => {
       // Refetch webhooks.
-      queryClient.invalidateQueries(['webhooks', token])
+      queryClient.invalidateQueries(['codeIdSets', token])
 
       onSuccess?.()
     },

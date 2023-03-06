@@ -13,6 +13,7 @@ export const Navigation = () => {
         {connected && (
           <>
             <Link href="/keys">Keys</Link>
+            <Link href="/webhooks">Webhooks</Link>
           </>
         )}
       </div>

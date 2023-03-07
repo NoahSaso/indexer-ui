@@ -34,7 +34,7 @@ export const AccountWebhookCard = ({
 
     const timeout = setTimeout(() => {
       setActionConfirm(undefined)
-    }, 5000)
+    }, 3000)
 
     return () => clearTimeout(timeout)
   }, [actionConfirm])

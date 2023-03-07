@@ -14,6 +14,7 @@ export const Navigation = () => {
           <>
             <Link href="/keys">Keys</Link>
             <Link href="/webhooks">Webhooks</Link>
+            <Link href="/code-id-sets">Code ID Sets</Link>
           </>
         )}
       </div>

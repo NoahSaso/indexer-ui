@@ -4,7 +4,7 @@ import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import { Loader } from '../misc/Loader'
 
 export type ButtonProps = ComponentPropsWithoutRef<'button'> & {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'none'
   // Default: 'md'
   size?: 'sm' | 'md' | 'lg'
   loading?: boolean
@@ -86,6 +86,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
               !disabledOrLoading,
             // Disabled.
             'opacity-50': disabledOrLoading,
+          },
+          variant === 'none' && {
+            // Always no padding
+            '!p-0': true,
+            // Default
+            'hover:opacity-80 active:opacity-70': !disabledOrLoading,
+            // Disabled
+            'text-text-button-disabled': disabledOrLoading,
           },
 
           className

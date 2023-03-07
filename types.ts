@@ -153,8 +153,29 @@ export type AccountWebhookEventAttempt = {
   statusCode: number
 }
 
+export enum AccountWebhookEventStatus {
+  Pending = 'pending',
+  Success = 'success',
+  Retrying = 'retrying',
+  Failure = 'failure',
+}
+
+export type ParsedEvent = {
+  codeId: number
+  contractAddress: string
+  blockHeight: string
+  blockTimeUnixMs: string
+  blockTimestamp: Date
+  key: string
+  value: string
+  valueJson: any
+  delete: boolean
+}
+
 export type AccountWebhookEvent = {
   uuid: string
+  status: AccountWebhookEventStatus
+  data: ParsedEvent
   url: string
   attempts: AccountWebhookEventAttempt[]
 }

@@ -45,7 +45,7 @@ export const useFireWebhookEvent = (
   const queryClient = useQueryClient()
   return useMutation(fireWebhookEvent, {
     onSuccess: (attempt, { id }) => {
-      // Refetch webhook events.
+      // Refetch webhook events to update status and attempts.
       queryClient.invalidateQueries(['webhookEvents', token, id])
 
       onSuccess?.(attempt)

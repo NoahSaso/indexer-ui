@@ -10,6 +10,7 @@ export type ButtonProps = ComponentPropsWithoutRef<'button'> & {
   loading?: boolean
   pressed?: boolean
   centered?: boolean
+  circular?: boolean
   childContainerClassName?: string
 }
 
@@ -25,6 +26,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       disabled,
       children,
       className,
+      circular,
       type = 'button',
       ...props
     },
@@ -35,7 +37,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         className={clsx(
-          'relative block rounded-md transition-all',
+          'relative block transition-all',
 
           // Sizes.
           {
@@ -43,6 +45,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             'link-text py-[6px] px-[10px]': size === 'md',
             'button-text py-[10px] px-[14px]': size === 'lg',
           },
+
+          // Rounded if circular.
+          circular ? 'rounded-full' : 'rounded-md',
 
           // Variants.
           variant === 'primary' && {

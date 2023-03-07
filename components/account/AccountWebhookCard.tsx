@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 
 import {
   useDeleteWebhook,
-  useFireWebhookEvent,
+  usePagination,
   useUpdateWebhook,
   useWebhookEvents,
 } from '@/hooks'
@@ -12,9 +12,15 @@ import { AccountWebhook } from '@/types'
 
 import { AccountWebhookEventCard } from './AccountWebhookEventCard'
 import { DropdownLabel, IconButton } from '../button'
-import { ButtonPopup, CopyToClipboard, Loader, Modal } from '../misc'
+import {
+  ButtonPopup,
+  CopyToClipboard,
+  Loader,
+  Modal,
+  Pagination,
+} from '../misc'
 
-const ATTEMPTS_PER_PAGE = 5
+const EVENTS_PER_PAGE = 5
 
 export type AccountWebhookCardProps = {
   webhook: AccountWebhook
@@ -67,12 +73,11 @@ export const AccountWebhookCard = ({
   const events = useWebhookEvents(webhook.id, {
     enabled: showingEvents,
   })
-  const fire = useFireWebhookEvent((attempt) => {
-    // Show toast on success.
-    toast.success(`Fired webhook. Status: ${attempt.statusCode}`)
-  })
 
-  const [attemptsPage, setAttemptsPage] = useState(1)
+  const { pagedData: pagedEvents, paginationProps } = usePagination({
+    data: events.data ?? [],
+    pageSize: EVENTS_PER_PAGE,
+  })
 
   return (
     <div className="relative flex flex-col gap-2 rounded-md bg-background-primary p-4">
@@ -151,29 +156,32 @@ export const AccountWebhookCard = ({
       </div>
 
       {/* Display events */}
-      <DropdownLabel
-        className="mt-2"
-        label="Events"
-        open={showingEvents}
-        toggle={() => setShowingEvents((s) => !s)}
-      />
+      <div className="flex flex-row flex-wrap items-center justify-between">
+        <DropdownLabel
+          className="mt-2"
+          label="Events"
+          open={showingEvents}
+          toggle={() => setShowingEvents((s) => !s)}
+        />
+
+        {showingEvents &&
+          !!events.data?.length &&
+          events.data.length > EVENTS_PER_PAGE && (
+            <Pagination {...paginationProps} />
+          )}
+      </div>
       {showingEvents && (
         <div className="flex flex-col gap-2">
           {events.isLoading ? (
             <Loader />
           ) : !!events.data?.length ? (
-            events.data
-              .slice(
-                (attemptsPage - 1) * ATTEMPTS_PER_PAGE,
-                attemptsPage * ATTEMPTS_PER_PAGE
-              )
-              .map((event) => (
-                <AccountWebhookEventCard
-                  key={event.uuid}
-                  event={event}
-                  webhook={webhook}
-                />
-              ))
+            pagedEvents.map((event) => (
+              <AccountWebhookEventCard
+                key={event.uuid}
+                event={event}
+                webhook={webhook}
+              />
+            ))
           ) : (
             <p className="secondary-text">None found.</p>
           )}

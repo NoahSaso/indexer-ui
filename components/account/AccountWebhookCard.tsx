@@ -1,9 +1,15 @@
-import { ExpandCircleDownOutlined, Webhook } from '@mui/icons-material'
+import {
+  ExpandCircleDownOutlined,
+  KeyRounded,
+  LinkRounded,
+  Webhook,
+} from '@mui/icons-material'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
 import {
   useDeleteWebhook,
+  useKeys,
   usePagination,
   useUpdateWebhook,
   useWebhookEvents,
@@ -31,6 +37,9 @@ export const AccountWebhookCard = ({
   webhook,
   onEdit,
 }: AccountWebhookCardProps) => {
+  const keys = useKeys()
+  const webhookKey = keys.data?.find((k) => k.id === webhook.accountKeyId)
+
   const [actionConfirm, setActionConfirm] = useState<'delete' | 'reset'>()
   // Clear after 3 seconds.
   useEffect(() => {
@@ -144,15 +153,31 @@ export const AccountWebhookCard = ({
         />
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="mr-8 flex flex-col gap-2">
         <div className="flex flex-row items-center gap-2">
           <Webhook className="!h-5 !w-5" />
-          <p className="primary-text grow truncate">
+          <p className="primary-text grow">
             {webhook.description || webhook.url}
           </p>
         </div>
 
-        {webhook.description && <p className="secondary-text">{webhook.url}</p>}
+        {webhookKey && (
+          <div className="flex flex-row items-center gap-2">
+            <KeyRounded className="!h-5 !w-5 rotate-45 text-icon-tertiary" />
+            <p className="primary-text grow text-text-tertiary">
+              {webhookKey.name}
+            </p>
+          </div>
+        )}
+
+        {webhook.description && (
+          <div className="flex flex-row items-center gap-2">
+            <LinkRounded className="!h-5 !w-5 text-icon-tertiary" />
+            <p className="primary-text grow text-text-tertiary">
+              {webhook.url}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Display events */}

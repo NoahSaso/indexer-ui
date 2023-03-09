@@ -97,7 +97,7 @@ export const AccountKeyCard = ({
         />
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="mr-8 flex flex-col gap-2">
         <div className="flex flex-row items-center gap-2">
           <KeyRounded className="!h-5 !w-5 rotate-45" />
           <p className="primary-text">{name}</p>

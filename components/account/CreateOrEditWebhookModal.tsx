@@ -48,7 +48,8 @@ type WebhookForm = Omit<
   }[]
 }
 
-const makeDefaults = () => ({
+const makeDefaults = (): Partial<WebhookForm> => ({
+  accountKeyId: undefined,
   description: '',
   url: '',
   onlyFirstSet: false,
@@ -92,6 +93,7 @@ export const CreateOrEditWebhookModal = ({
     }
 
     form.reset({
+      accountKeyId: editingWebhook.accountKeyId ?? undefined,
       description: editingWebhook.description,
       url: editingWebhook.url,
       onlyFirstSet: editingWebhook.onlyFirstSet,

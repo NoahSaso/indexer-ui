@@ -77,7 +77,7 @@ export enum AccountWebhookStateKeyType {
 
 export type AccountWebhook = {
   id: number
-  keyId: number | null
+  accountKeyId: number | null
   description: string | null
   url: string
   secret: string

@@ -89,7 +89,7 @@ export const AccountWebhookCard = ({
   })
 
   return (
-    <div className="relative flex flex-col gap-2 rounded-md bg-background-primary p-4">
+    <div className="relative flex flex-col gap-2 rounded-md bg-background-secondary p-4">
       <div className="absolute top-2 right-2">
         <ButtonPopup
           Trigger={({ open, ...props }) => (
@@ -156,26 +156,20 @@ export const AccountWebhookCard = ({
       <div className="mr-8 flex flex-col gap-2">
         <div className="flex flex-row items-center gap-2">
           <Webhook className="!h-5 !w-5" />
-          <p className="primary-text grow">
-            {webhook.description || webhook.url}
-          </p>
+          <p className="primary-text">{webhook.description || webhook.url}</p>
         </div>
 
         {webhookKey && (
           <div className="flex flex-row items-center gap-2">
             <KeyRounded className="!h-5 !w-5 rotate-45 text-icon-tertiary" />
-            <p className="primary-text grow text-text-tertiary">
-              {webhookKey.name}
-            </p>
+            <p className="primary-text text-text-tertiary">{webhookKey.name}</p>
           </div>
         )}
 
         {webhook.description && (
           <div className="flex flex-row items-center gap-2">
             <LinkRounded className="!h-5 !w-5 text-icon-tertiary" />
-            <p className="primary-text grow text-text-tertiary">
-              {webhook.url}
-            </p>
+            <p className="primary-text text-text-tertiary">{webhook.url}</p>
           </div>
         )}
       </div>

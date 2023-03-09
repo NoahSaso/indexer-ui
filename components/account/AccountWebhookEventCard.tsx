@@ -1,4 +1,13 @@
-import { Cancel, CheckCircle, Outbox, Refresh } from '@mui/icons-material'
+import {
+  Cancel,
+  CheckCircle,
+  Code,
+  Help,
+  LayersRounded,
+  Outbox,
+  Refresh,
+} from '@mui/icons-material'
+import { Link } from '@mui/material'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import TimeAgo from 'react-timeago'
@@ -57,25 +66,39 @@ export const AccountWebhookEventCard = ({
       ? CheckCircle
       : event.status === AccountWebhookEventStatus.Failure
       ? Cancel
-      : undefined
+      : Help
 
   return (
-    <div className="flex flex-col gap-2 rounded-md bg-background-primary p-4">
+    <div className="flex flex-col gap-2 rounded-md bg-background-secondary p-4">
       <div className="flex flex-row items-start justify-between gap-6">
         <div className="flex flex-col gap-2">
-          <div className="flex flex-row flex-wrap items-center gap-2">
-            {Status && <Status className="!h-5 !w-5" />}
+          <div className="flex flex-row items-center gap-2">
+            <LayersRounded className="!h-5 !w-5" />
+            <p className="primary-text">{event.data.blockHeight}</p>
+          </div>
 
-            <p className="primary-text grow break-all">
-              <span className="secondary-text">Block: </span>
-              {event.data.blockHeight}{' '}
-              <span className="secondary-text">Contract: </span>
+          <div className="flex flex-row items-center gap-2">
+            <Code className="!h-5 !w-5" />
+            <p className="primary-text break-all">
               {event.data.contractAddress}
             </p>
           </div>
 
+          <div className="flex flex-row items-center gap-2">
+            <Status className="!h-5 !w-5 text-icon-tertiary" />
+            <p className="primary-text text-text-tertiary">
+              {event.status[0].toUpperCase() +
+                event.status.slice(1).toLowerCase()}
+            </p>
+          </div>
+
           {event.url !== webhook.url && (
-            <p className="secondary-text">{event.url}</p>
+            <div className="flex flex-row items-center gap-2">
+              <Link className="!h-5 !w-5 text-icon-tertiary" />
+              <p className="primary-text break-all text-text-tertiary">
+                {event.url}
+              </p>
+            </div>
           )}
         </div>
 

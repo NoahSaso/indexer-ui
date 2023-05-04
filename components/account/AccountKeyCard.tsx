@@ -1,4 +1,4 @@
-import { ExpandCircleDownOutlined, KeyRounded } from '@mui/icons-material'
+import { KeyRounded, Settings } from '@mui/icons-material'
 import { useEffect, useState } from 'react'
 
 import { AccountKey, AccountKeyCreditPaymentSource } from '@/types'
@@ -48,7 +48,7 @@ export const AccountKeyCard = ({
         <ButtonPopup
           Trigger={({ open, ...props }) => (
             <IconButton
-              Icon={ExpandCircleDownOutlined}
+              Icon={Settings}
               focused={open}
               variant="ghost"
               {...props}

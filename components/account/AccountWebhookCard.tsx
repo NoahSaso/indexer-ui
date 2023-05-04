@@ -1,9 +1,4 @@
-import {
-  ExpandCircleDownOutlined,
-  KeyRounded,
-  LinkRounded,
-  Webhook,
-} from '@mui/icons-material'
+import { KeyRounded, LinkRounded, Settings, Webhook } from '@mui/icons-material'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
@@ -94,7 +89,7 @@ export const AccountWebhookCard = ({
         <ButtonPopup
           Trigger={({ open, ...props }) => (
             <IconButton
-              Icon={ExpandCircleDownOutlined}
+              Icon={Settings}
               focused={open}
               variant="ghost"
               {...props}

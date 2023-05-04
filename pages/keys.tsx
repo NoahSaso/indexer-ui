@@ -328,7 +328,7 @@ const InnerKeys = () => {
       {/* Buy credits modal */}
       <Modal
         header={{
-          title: `Buy credits for ${payingForKey?.name}`,
+          title: `Fund ${payingForKey?.name}`,
         }}
         onClose={() => setPayModalVisible(false)}
         visible={payModalVisible}

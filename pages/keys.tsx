@@ -258,6 +258,7 @@ const InnerKeys = () => {
             New
           </Button>
         }
+        subtitle="Keys are used to authenticate with the API. Once you create a key, you must fund it with some credits before using it."
         title="Keys"
       />
 

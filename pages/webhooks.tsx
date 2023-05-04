@@ -42,6 +42,7 @@ const InnerWebhooks = () => {
             New
           </Button>
         }
+        subtitle="Webhooks fire when an event that matches a filter occurs. Use this to listen to real-time blockchain smart contract events."
         title="Webhooks"
       />
 

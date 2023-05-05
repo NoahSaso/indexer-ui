@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast'
 
 import { Tag } from './Tag'
 import { Button } from '../button'
-import { TextInput } from '../input'
+import { SegmentedControls, TextInput } from '../input'
 
 type FormValues = {
   contract: string
@@ -17,6 +17,7 @@ export const TryItOut = () => {
   const {
     watch,
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({
@@ -90,6 +91,24 @@ export const TryItOut = () => {
       </div>
 
       <div className="flex flex-col gap-1">
+        <p>State Key Type</p>
+        <SegmentedControls
+          onSelect={(value) => setValue('stateKeyType', value)}
+          selected={form.stateKeyType}
+          tabs={[
+            {
+              label: 'Item',
+              value: 'item' as const,
+            },
+            {
+              label: 'Map',
+              value: 'map' as const,
+            },
+          ]}
+        />
+      </div>
+
+      <div className="flex flex-col gap-1">
         <p>State Key</p>
         <TextInput
           error={errors?.stateKey}
@@ -105,7 +124,8 @@ export const TryItOut = () => {
           <Link className="mr-2 !h-6 !w-6 -rotate-45" />
 
           <p className="shrink-0">
-            /contract/<Tag>address</Tag>/item?key=<Tag>state key</Tag>
+            /contract/<Tag>address</Tag>/<Tag>{form.stateKeyType}</Tag>?key=
+            <Tag>state key</Tag>
           </p>
 
           <div className="ml-6 flex grow flex-row justify-end font-sans">
@@ -128,7 +148,7 @@ export const TryItOut = () => {
                 {JSON.stringify(queryResult, null, 2)}
               </pre>
             ) : (
-              <p className="font-mono">{queryResult ?? 'undefined'}</p>
+              <p className="font-mono">{queryResult || 'undefined'}</p>
             )}
           </div>
         )}

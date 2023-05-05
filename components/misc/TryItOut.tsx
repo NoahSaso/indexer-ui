@@ -131,16 +131,15 @@ export const TryItOut = () => {
 
       {queryLoaded && (
         <div className="mt-1 flex flex-col gap-3 rounded-md bg-background-secondary p-3">
-          <div className="flex flex-col gap-2">
-            <p className="font-bold">Result</p>
-            {typeof queryResult === 'object' ? (
-              <pre className="whitespace-pre-wrap break-all rounded-md bg-background-base p-2 font-mono">
-                {JSON.stringify(queryResult, null, 2)}
-              </pre>
-            ) : (
-              <p className="font-mono">{queryResult || 'undefined'}</p>
-            )}
-          </div>
+          <p className="title-text">Result</p>
+
+          {typeof queryResult === 'object' ? (
+            <pre className="whitespace-pre-wrap break-all rounded-md bg-background-base p-2 font-mono">
+              {JSON.stringify(queryResult, null, 2)}
+            </pre>
+          ) : (
+            <p className="font-mono">{queryResult || 'undefined'}</p>
+          )}
         </div>
       )}
     </form>

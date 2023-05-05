@@ -12,25 +12,13 @@ import {
   CopyToClipboard,
   EnsureConnected,
   Header,
-  InputLabel,
   Loader,
   Modal,
   NumberInput,
-  TextAreaInput,
-  TextInput,
 } from '@/components'
-import {
-  useBalance,
-  useConfig,
-  useCreateKey,
-  useKeys,
-  useResetKey,
-} from '@/hooks'
-import {
-  AccountKey,
-  AccountKeyCreditPaymentSource,
-  CreateKeyRequest,
-} from '@/types'
+import { CreateKeyModal } from '@/components/modals'
+import { useBalance, useConfig, useKeys, useResetKey } from '@/hooks'
+import { AccountKey, AccountKeyCreditPaymentSource } from '@/types'
 import {
   PAY_DECIMALS,
   PAY_DENOM,
@@ -86,13 +74,7 @@ const InnerKeys = () => {
   })
 
   const [createVisible, setCreateVisible] = useState(false)
-  const createKeyForm = useForm<CreateKeyRequest>({
-    defaultValues: {
-      name: '',
-      description: '',
-    },
-  })
-  const createKey = useCreateKey((key, apiKey) => {
+  const onCreateKey = (key: AccountKey, apiKey: string) => {
     // Show toast on success.
     toast.success(`Created ${key.name}.`)
 
@@ -105,7 +87,7 @@ const InnerKeys = () => {
       apiKey,
     })
     setApiKeyVisible(true)
-  })
+  }
 
   const config = useConfig()
   if (config.data && config.data.nativeDenomAccepted !== PAY_DENOM) {
@@ -281,50 +263,11 @@ const InnerKeys = () => {
         )}
       </div>
 
-      {/* Create key modal */}
-      <Modal
-        containerClassName="w-full"
-        header={{
-          title: 'Create key',
-        }}
+      <CreateKeyModal
         onClose={() => setCreateVisible(false)}
+        onCreateKey={onCreateKey}
         visible={createVisible}
-      >
-        <form
-          className="flex flex-col gap-4"
-          onSubmit={createKeyForm.handleSubmit((data) =>
-            createKey.mutate(data)
-          )}
-        >
-          <div className="space-y-2">
-            <InputLabel>Name (unique)</InputLabel>
-            <TextInput
-              error={createKeyForm.formState.errors?.name}
-              fieldName="name"
-              register={createKeyForm.register}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <InputLabel>Description (optional)</InputLabel>
-            <TextAreaInput
-              error={createKeyForm.formState.errors?.description}
-              fieldName="description"
-              register={createKeyForm.register}
-            />
-          </div>
-
-          <Button
-            loading={createKey.isLoading}
-            size="lg"
-            type="submit"
-            variant="secondary"
-          >
-            Create key
-          </Button>
-        </form>
-      </Modal>
+      />
 
       {/* Buy credits modal */}
       <Modal

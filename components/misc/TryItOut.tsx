@@ -1,16 +1,14 @@
-import { Link } from '@mui/icons-material'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 
-import { Tag } from './Tag'
 import { Button } from '../button'
 import { SegmentedControls, TextInput } from '../input'
 
 type FormValues = {
   contract: string
-  stateKey: string
   stateKeyType: 'item' | 'map'
+  stateKey: string
 }
 
 export const TryItOut = () => {
@@ -23,27 +21,28 @@ export const TryItOut = () => {
   } = useForm<FormValues>({
     defaultValues: {
       contract: '',
-      stateKey: '',
       stateKeyType: 'item',
+      stateKey: '',
     },
   })
   const form = watch()
-
-  const url = `https://juno-mainnet.indexer.zone/contract/${form.contract}/${form.stateKeyType}?key=${form.stateKey}`
 
   const [queryLoading, setQueryLoading] = useState(false)
   const [queryResult, setQueryResult] = useState()
   const [queryLoaded, setQueryLoaded] = useState(false)
   const [queryCooldown, setQueryCooldown] = useState(0)
-  const onSubmit = async () => {
+  const onSubmit = async ({ contract, stateKeyType, stateKey }: FormValues) => {
     setQueryLoading(true)
     try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'X-API-Key': 'test',
-        },
-      })
+      const response = await fetch(
+        `https://juno-mainnet.indexer.zone/contract/${contract}/${stateKeyType}?key=${stateKey}`,
+        {
+          method: 'GET',
+          headers: {
+            'X-API-Key': 'test',
+          },
+        }
+      )
 
       const result = response.headers.get('Content-Type')?.includes('json')
         ? await response.json()
@@ -119,28 +118,19 @@ export const TryItOut = () => {
         />
       </div>
 
-      <div className="mt-6 flex flex-col gap-3 rounded-md bg-background-secondary p-3">
-        <div className="flex flex-row flex-wrap items-center gap-1 font-mono text-xs">
-          <Link className="mr-2 !h-6 !w-6 -rotate-45" />
+      <div className="mt-3 flex flex-row justify-end">
+        <Button
+          disabled={cooldownActive}
+          loading={queryLoading}
+          type="submit"
+          variant="primary"
+        >
+          Query{cooldownActive && ` in ${queryCooldown}s`}
+        </Button>
+      </div>
 
-          <p className="shrink-0">
-            /contract/<Tag>address</Tag>/<Tag>{form.stateKeyType}</Tag>?key=
-            <Tag>state key</Tag>
-          </p>
-
-          <div className="ml-6 flex grow flex-row justify-end font-sans">
-            <Button
-              disabled={cooldownActive}
-              loading={queryLoading}
-              type="submit"
-              variant="primary"
-            >
-              Query{cooldownActive && ` in ${queryCooldown}s`}
-            </Button>
-          </div>
-        </div>
-
-        {queryLoaded && (
+      {queryLoaded && (
+        <div className="mt-1 flex flex-col gap-3 rounded-md bg-background-secondary p-3">
           <div className="flex flex-col gap-2">
             <p className="font-bold">Result</p>
             {typeof queryResult === 'object' ? (
@@ -151,8 +141,8 @@ export const TryItOut = () => {
               <p className="font-mono">{queryResult || 'undefined'}</p>
             )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </form>
   )
 }

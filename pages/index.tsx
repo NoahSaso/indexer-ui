@@ -73,6 +73,14 @@ const Home = () => {
       </div>
 
       <div className="flex flex-col gap-2">
+        <p className="header-text">Try it out</p>
+
+        <p>Use the widget below to try querying state from a smart contract.</p>
+
+        <TryItOut />
+      </div>
+
+      <div className="flex flex-col gap-2">
         <p className="header-text">How?</p>
 
         <p>The contract API is very straightforward and documented below.</p>
@@ -206,16 +214,6 @@ const Home = () => {
             </p>
           </div>
         </div>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <p className="header-text">Try it out</p>
-
-        <p>
-          Use the widget below to try getting some state from a smart contract.
-        </p>
-
-        <TryItOut />
       </div>
     </div>
   )

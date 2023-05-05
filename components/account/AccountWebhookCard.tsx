@@ -13,13 +13,8 @@ import { AccountWebhook } from '@/types'
 
 import { AccountWebhookEventCard } from './AccountWebhookEventCard'
 import { DropdownLabel, IconButton } from '../button'
-import {
-  ButtonPopup,
-  CopyToClipboard,
-  Loader,
-  Modal,
-  Pagination,
-} from '../misc'
+import { ButtonPopup, CopyToClipboard, Loader, Pagination } from '../misc'
+import { Modal } from '../modals'
 
 const EVENTS_PER_PAGE = 5
 

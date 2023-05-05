@@ -7,6 +7,7 @@ import {
   WalletType,
 } from '@noahsaso/cosmodal'
 import type { AppProps } from 'next/app'
+import { NextSeo } from 'next-seo'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { RecoilRoot } from 'recoil'
 
@@ -74,6 +75,12 @@ export default function App({ Component, pageProps }: AppProps) {
       </WalletManagerProvider>
 
       <ToastNotifications />
+
+      <NextSeo
+        canonical="https://indexer.zone"
+        description="Indexer for blockchain smart contracts built on CosmWasm, currently running on Juno."
+        title="CosmWasm Indexer"
+      />
     </>
   )
 }

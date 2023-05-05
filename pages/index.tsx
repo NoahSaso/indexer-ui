@@ -38,6 +38,17 @@ const Home = () => {
       </div>
 
       <div className="flex flex-col gap-2">
+        <p className="header-text">What?</p>
+
+        <p>This indexer supports:</p>
+        <ul className="list-inside">
+          <li>Current and historical smart contract state queries.</li>
+          <li>Webhooks that fire when state changes.</li>
+          <li>WebSockets that send real-time state updates to an app.</li>
+        </ul>
+      </div>
+
+      <div className="flex flex-col gap-2">
         <p className="header-text">Where?</p>
         <p>
           This indexer currently runs on{' '}

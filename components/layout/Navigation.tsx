@@ -1,9 +1,12 @@
 import { useWallet } from '@noahsaso/cosmodal'
 
+import { useLogin } from '@/hooks'
+
 import { ConnectWallet, DisconnectWallet, Link } from '../button'
 
 export const Navigation = () => {
   const { connected } = useWallet()
+  const { token, loggingIn } = useLogin()
 
   return (
     <div className="flex w-full shrink-0 flex-row items-center justify-between border-b border-border-primary bg-background-tertiary p-6">
@@ -12,7 +15,7 @@ export const Navigation = () => {
           Home
         </Link>
 
-        {connected && (
+        {connected && !!token && (
           <>
             <Link href="/keys" invert>
               Keys
@@ -27,7 +30,11 @@ export const Navigation = () => {
         )}
       </div>
 
-      {connected ? <DisconnectWallet /> : <ConnectWallet />}
+      {connected && !loggingIn && !!token ? (
+        <DisconnectWallet />
+      ) : (
+        <ConnectWallet />
+      )}
     </div>
   )
 }

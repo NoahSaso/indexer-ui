@@ -1,4 +1,4 @@
-import { atomFamily } from 'recoil'
+import { atom, atomFamily } from 'recoil'
 
 import { localStorageEffectJSON } from './effects'
 
@@ -7,4 +7,9 @@ export const accountToken = atomFamily<string, string>({
   key: 'accountToken',
   default: '',
   effects: [localStorageEffectJSON],
+})
+
+export const loggingInAtom = atom<boolean>({
+  key: 'loggingIn',
+  default: false,
 })

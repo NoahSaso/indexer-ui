@@ -19,10 +19,10 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
   const token = useRecoilValue(
     accountToken(connectedWallet?.publicKey.hex ?? '')
   )
-  const login = useLogin()
+  const { ready, login } = useLogin()
 
   useEffect(() => {
-    if (!connected || !login) {
+    if (!connected || !ready) {
       return
     }
 
@@ -38,7 +38,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
 
       doLogin()
     }
-  }, [connected, connect, disconnect, token, login])
+  }, [connected, connect, disconnect, token, ready, login])
 
   return (
     <main className="flex h-full w-full flex-col">

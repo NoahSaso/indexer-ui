@@ -1,6 +1,6 @@
 import { ChainInfoID } from '@noahsaso/cosmodal'
 
-export const API_BASE = 'https://accounts.indexer.zone'
+export const API_BASE = 'https://accounts.indexer.daodao.zone'
 export const SIGNATURE_TYPE = 'Indexer Login'
 
 // Juno mainnet

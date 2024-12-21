@@ -5,7 +5,7 @@ export const SIGNATURE_TYPE = 'Indexer Login'
 
 // Juno mainnet
 export const CHAIN_ID = ChainInfoID.Juno1
-export const CHAIN_RPC = 'https://juno-rpc.reece.sh'
+export const CHAIN_RPC = 'https://juno-rpc.kleomedes.network'
 
 // USDC
 export const PAY_DENOM =

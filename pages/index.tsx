@@ -1,13 +1,11 @@
-import { LinkRounded } from '@mui/icons-material'
-
-import { Link, Tag, TryItOut } from '@/components'
-
 const Home = () => {
   return (
     <div className="mx-auto flex max-w-prose flex-col gap-4">
       <p className="hero-text">CosmWasm Indexer</p>
 
-      <div className="flex flex-col gap-2">
+      <p className="text-center text-lg">SITE UNDER CONSTRUCTION</p>
+
+      {/* <div className="flex flex-col gap-2">
         <p className="header-text">Why?</p>
         <p>
           Rather than indexing the transactions and events that end up in a
@@ -225,7 +223,7 @@ const Home = () => {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
